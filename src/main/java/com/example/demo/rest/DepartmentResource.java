@@ -74,13 +74,13 @@ public class DepartmentResource implements DepartmentAPI {
 //        return ResponseEntity.ok(departmentService.getByDepartmentStartingWith(name));
 //    }
 
-    public ResponseEntity<List<DepartmentDTO>> findDepartmentByName(String name){
-        try{
-            return ResponseEntity.ok(departmentServiceImp.findDepartmentByName(name));
-        }catch (ResponseException e){
-            throw e;
-        }
-    }
+//    public ResponseEntity<List<DepartmentDTO>> findDepartmentByName(String name){
+//        try{
+//            return ResponseEntity.ok(departmentServiceImp.findDepartmentByName(name));
+//        }catch (ResponseException e){
+//            throw e;
+//        }
+//    }
 
 
 

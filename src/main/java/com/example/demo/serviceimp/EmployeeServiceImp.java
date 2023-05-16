@@ -1,6 +1,8 @@
 package com.example.demo.serviceimp;
 
 
+import com.example.demo.entity.Project;
+import com.example.demo.entity.Relative;
 import com.example.demo.exception.CompanyException;
 import com.example.demo.mapper.EmployeeMapper;
 import com.example.demo.service.EmployeeService;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -26,6 +29,10 @@ public class EmployeeServiceImp implements EmployeeService {
     private final DepartmentServiceImp departmentServiceImp;
 
     private final EmployeeMapper employeeMapper;
+
+    private final ProjectService projectService;
+
+//    private final RelativeService relativeService;
 
     public Employee createEmployee(EmployeeDTO employeeDTO) {
 
@@ -130,5 +137,28 @@ public class EmployeeServiceImp implements EmployeeService {
           return employeeRepository.findEmployeeWithMaxSalary();
 //        return employeeMapper.toDTo(employee);
     }
+
+
+
+
+    //---------------------QUERY WITH JAVA 8 USING STREAM---------------------\\
+
+
+     public List<EmployeeDTO> getEmployeeWithSameBirthMonths() {
+        List<Employee> employees = employeeRepository.findAll();
+        employees = employees.stream()
+                .filter(e -> e.getDob().getMonthValue() == 3)
+                .collect(Collectors.toList());
+
+        return employeeMapper.toDtos(employees);
+    }
+
+
+    //5.List of departments and projects that they manage
+    void getAllDepartmentAndProject() {
+        List<Project> project = projectService.getAllProject();
+        project.forEach(System.out::println);
+    }
+
 }
 

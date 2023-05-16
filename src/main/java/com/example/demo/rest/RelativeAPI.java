@@ -15,7 +15,7 @@ public interface RelativeAPI {
     ResponseEntity<Relative> createRelative(@RequestBody RelativeDTO relativeDTO);
 
     @GetMapping
-    ResponseEntity<List<Relative>> getAllRelative();
+    ResponseEntity<List<Relative>> getAll();
 
     @GetMapping("/{relativeId}")
     ResponseEntity<Optional<Relative>> getRelativeById(@PathVariable("relativeId") Long relativeId);

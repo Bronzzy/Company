@@ -25,8 +25,8 @@ public class RelativeResource implements RelativeAPI {
     }
 
     @Override
-    public ResponseEntity<List<Relative>> getAllRelative() {
-        return ResponseEntity.ok(relativeService.getAllRelative());
+    public ResponseEntity<List<Relative>> getAll() {
+        return ResponseEntity.ok(relativeService.getAll());
     }
 
 

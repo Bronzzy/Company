@@ -20,7 +20,8 @@ public class Relative {
     @Column(name = "full_name")
     private String fullName;
 
-    @Enumerated(EnumType.STRING)
+    @Column(name ="gender")
+    @Enumerated(EnumType.ORDINAL)
     private Gender gender;
 
     @Column(name = "phone_number")

@@ -79,17 +79,17 @@ public class DepartmentServiceImp {
         return departmentRepository.findDepartmentStartDateLessThan(startDate);
     }
 
-    public List<DepartmentDTO> findDepartmentByName(String name){
-        log.info("find department by name {}",name);
-        List<Department> department = departmentRepository.findDepartmentByName(name);
-        if(name == null || name.isBlank()) {
-            throw CompanyException.badRequest("DepartmentNameEmpty", "Department name can't be null or empty");
-        }
-        if(department.isEmpty()){
-            throw CompanyException.DepartmentNotFound();
-        }
-        return DepartmentMapper.INSTANCE.toDtos(department);
-    }
+//    public List<DepartmentDTO> findDepartmentByName(String name){
+//        log.info("find department by name {}",name);
+//        List<Department> department = departmentRepository.findDepartmentByName(name);
+//        if(name == null || name.isBlank()) {
+//            throw CompanyException.badRequest("DepartmentNameEmpty", "Department name can't be null or empty");
+//        }
+//        if(department.isEmpty()){
+//            throw CompanyException.DepartmentNotFound();
+//        }
+//        return DepartmentMapper.INSTANCE.toDtos(department);
+//    }
 
 
 }

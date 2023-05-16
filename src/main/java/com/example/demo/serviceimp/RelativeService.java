@@ -1,6 +1,7 @@
 package com.example.demo.serviceimp;
 
 import com.example.demo.entity.Gender;
+import com.example.demo.mapper.RelativeMapper;
 import com.example.demo.serviceimp.dto.RelativeDTO;
 import com.example.demo.entity.Employee;
 import com.example.demo.entity.Relative;
@@ -10,12 +11,14 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
 public class RelativeService {
     private final RelativeRepository relativeRepository;
     private final EmployeeServiceImp employeeServiceImp;
+    private final RelativeMapper relativeMapper;
 
     public Relative createRelative(RelativeDTO relativeDTO) {
 
@@ -32,7 +35,7 @@ public class RelativeService {
         return relativeRepository.save(relative);
     }
 
-    public List<Relative> getAllRelative() {
+    public List<Relative> getAll(){
         return relativeRepository.findAll();
     }
 
@@ -74,5 +77,52 @@ public class RelativeService {
 
     public List<Relative> getRelativeByGenderNot(Gender gender){
         return relativeRepository.findByGenderNot(gender);
+    }
+
+
+
+
+
+
+
+//    void getEmployeeAndAllRelative() {
+//        List<Relative> relatives = relativeService.getAll();
+//        relatives = relatives.stream()
+//                .filter(r -> r.getEmployee().getEmployeeId().equals("mlates0"))
+//                .collect(Collectors.toList());
+//
+//        relatives.forEach(System.out::println);
+//    }
+//
+//    //4. Get an employee and 1 emergency contact relatives that have type is FATHER-> MOTHER-> Any
+//
+    public List<RelativeDTO> getEmployeeWithFatherRelationship() {
+        List<Relative> relatives = relativeRepository.findAll();
+        relatives = relatives.stream()
+                .filter(r -> "father".equals(r.getRelationship()))
+                .collect(Collectors.toList());
+
+        return relativeMapper.toDtos(relatives);
+    }
+
+
+    public List<RelativeDTO> getEmployeeWithMotherRelationship() {
+        List<Relative> relatives = relativeRepository.findAll();
+        relatives = relatives.stream()
+                .filter(r -> "father".equals(r.getRelationship()))
+                .collect(Collectors.toList());
+
+        return relativeMapper.toDtos(relatives);
+    }
+
+
+    public List<RelativeDTO> getEmployeeWithOtherRelationship() {
+        List<Relative> relatives = relativeRepository.findAll();
+        relatives = relatives.stream()
+                .filter(r -> !("mother".equals(r.getRelationship())))
+                .filter(r -> !("father".equals(r.getRelationship())))
+                .collect(Collectors.toList());
+
+        return relativeMapper.toDtos(relatives);
     }
 }

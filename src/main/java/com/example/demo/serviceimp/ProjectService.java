@@ -1,5 +1,6 @@
 package com.example.demo.serviceimp;
 
+import com.example.demo.mapper.ProjectMapper;
 import com.example.demo.serviceimp.dto.ProjectDTO;
 import com.example.demo.entity.Department;
 import com.example.demo.entity.Project;
@@ -11,12 +12,15 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class ProjectService {
     private final ProjectRepository projectRepository;
     private final DepartmentServiceImp departmentServiceImp;
+
+    private final ProjectMapper projectMapper;
 
     public Project createProject(ProjectDTO projectDTO) {
         Project project = new Project();
@@ -56,4 +60,24 @@ public class ProjectService {
         projectRepository.deleteById(projectId);
     }
 
+
+
+    //---------------------UNIT TEST WITH JAVA 8 USING STREAM---------------------\\
+
+    public List<ProjectDTO> getAllProjectAndDepartment(){
+        List<Project> projects = projectRepository.findAll();
+        return projectMapper.toDTOs(projects);
+    }
+
+    public List<ProjectDTO> getProjectInVietNameNumberOfEmployeeAndTotalOfHours(){
+        List<Project> projectsInVietnam = projectRepository.findAll();
+        projectsInVietnam = projectsInVietnam.stream()
+                .filter(p -> "VIETNAM".equals(p.getArea()))
+                .collect(Collectors.toList());
+
+        List<Project> projectsSummary = projectsInVietnam.stream()
+                .map(p -> {
+                    int numberOfEmployees =
+                })
+    }
 }

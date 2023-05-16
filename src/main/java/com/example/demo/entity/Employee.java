@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -58,4 +59,9 @@ public class Employee {
     @ManyToOne
     @JoinColumn(name = "deptId")
     private Department department;
+
+//    @OneToMany(mappedBy = "employee",fetch = FetchType.EAGER)
+//    private List<Relative> relatives;
+
+
 }

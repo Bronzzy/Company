@@ -33,8 +33,8 @@ public interface DepartmentAPI {
     @GetMapping("/startdatelessthan")
     ResponseEntity<List<DepartmentDTO>> findDepartmentStarDateLessThan(@RequestParam("startDate") String startDate);
 
-    @GetMapping("/byname")
-    ResponseEntity<List<DepartmentDTO>> findDepartmentByName(@RequestParam("name") String name);
+//    @GetMapping("/byname")
+//    ResponseEntity<List<DepartmentDTO>> findDepartmentByName(@RequestParam("name") String name);
 
 }
 
