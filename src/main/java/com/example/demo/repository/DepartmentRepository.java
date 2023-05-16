@@ -17,5 +17,5 @@ public interface DepartmentRepository extends JpaRepository<Department, Long> {
     List<DepartmentDTO> findDepartmentStartDateLessThan(@Param("startDate") LocalDate startDate);
 
     @Query(name = "SELECT * from Department d where d.department_name = :name", nativeQuery = true)
-    Department findDepartmentByName(String name);
+    List<Department> findDepartmentByName(String name);
 }

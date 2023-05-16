@@ -68,16 +68,4 @@ public class ProjectService {
         List<Project> projects = projectRepository.findAll();
         return projectMapper.toDTOs(projects);
     }
-
-    public List<ProjectDTO> getProjectInVietNameNumberOfEmployeeAndTotalOfHours(){
-        List<Project> projectsInVietnam = projectRepository.findAll();
-        projectsInVietnam = projectsInVietnam.stream()
-                .filter(p -> "VIETNAM".equals(p.getArea()))
-                .collect(Collectors.toList());
-
-        List<Project> projectsSummary = projectsInVietnam.stream()
-                .map(p -> {
-                    int numberOfEmployees =
-                })
-    }
 }
