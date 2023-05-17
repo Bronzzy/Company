@@ -62,6 +62,7 @@ public class AssignmentServiceImp {
         assignmentRepository.deleteById(assignmentId);
     }
 
+    //6. List of Projects at VIETNAM, + number of employees and total num_of_hour
     public CustomAssignmentEmployeeProject findProjectInArea(String area) {
         List<Assignment> assignments = assignmentRepository.findAll();
         assignments = assignments.stream().filter(a -> area.equalsIgnoreCase(a.getProject().getArea()))
@@ -80,4 +81,8 @@ public class AssignmentServiceImp {
                 .build();
         return customAssignmentEmployeeProject;
     }
+
+
+    //7. List of projects at VIETNAM total, num_of_hours, and Total salary
+
 }

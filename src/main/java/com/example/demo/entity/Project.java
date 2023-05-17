@@ -1,10 +1,12 @@
 package com.example.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Collection;
 
 @Data
 @NoArgsConstructor
@@ -25,4 +27,8 @@ public class Project {
     @ManyToOne
     @JoinColumn(name = "managedDepartment")
     private Department department;
+
+    @OneToMany(mappedBy = "project")
+    @JsonIgnore
+    private Collection<Assignment> assignments;
 }

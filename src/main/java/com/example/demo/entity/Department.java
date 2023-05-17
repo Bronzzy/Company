@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 
 @Builder
 @Data
@@ -44,4 +45,13 @@ public class Department {
 
     @Column(name = "start_date")
     private LocalDate startDate;
+
+    @OneToMany(mappedBy = "department")
+    private List<DepartmentLocation> departmentLocations;
+
+    @OneToMany(mappedBy = "department")
+    private List<Employee> employees;
+
+    @OneToMany(mappedBy = "department")
+    private List<Project> projects;
 }

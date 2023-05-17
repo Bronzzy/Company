@@ -143,13 +143,12 @@ public class EmployeeServiceImp implements EmployeeService {
 
     //---------------------QUERY WITH JAVA 8 USING STREAM---------------------\\
 
-
+    //12. List of employees who have not been assigned to any project
      public List<EmployeeDTO> getEmployeeWithSameBirthMonths() {
-        List<Employee> employees = employeeRepository.findAll();
-        employees = employees.stream()
-                .filter(e -> e.getDob().getMonthValue() == 3)
-                .collect(Collectors.toList());
 
+        List<Employee> employees= employeeRepository.findAll().stream()
+                .filter(e -> e.getAssignment() == null)
+                .collect(Collectors.toList());
         return employeeMapper.toDtos(employees);
     }
 
