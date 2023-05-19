@@ -3,17 +3,18 @@ package com.example.demo.serviceimp;
 import com.example.demo.entity.Assignment;
 import com.example.demo.entity.Employee;
 import com.example.demo.mapper.ProjectMapper;
-import com.example.demo.serviceimp.dto.ProjectDTO;
+import com.example.demo.repository.AssignmentRepository;
+import com.example.demo.serviceimp.dto.*;
 import com.example.demo.entity.Department;
 import com.example.demo.entity.Project;
 
 import com.example.demo.repository.ProjectRepository;
 
-import com.example.demo.serviceimp.dto.ProjectSalaryDTO;
-import com.example.demo.serviceimp.dto.ProjectWithEmployeeAndHoursDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.expression.spel.ast.Assign;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -23,6 +24,8 @@ import java.util.stream.Collectors;
 public class ProjectService {
     private final ProjectRepository projectRepository;
     private final DepartmentServiceImp departmentServiceImp;
+
+    private final AssignmentRepository assignmentRepository;
 
     private final ProjectMapper projectMapper;
 
@@ -72,27 +75,102 @@ public class ProjectService {
         return projectMapper.toDTOs(projects);
     }
 
-    //10. List all projects with the number of employees and number of hours in a specific area
-    public List<ProjectWithEmployeeAndHoursDTO> getProjectWithTotalEmployeesAndHours(String area){
-       return projectRepository.findAll().stream()
-               .filter(p -> area.equals(p.getArea()))
-               .map(p ->{
-                   ProjectWithEmployeeAndHoursDTO projectWithEmployeeAndHoursDTO = new ProjectWithEmployeeAndHoursDTO();
-                   projectWithEmployeeAndHoursDTO.setProjectId(p.getProjectId());
-                   projectWithEmployeeAndHoursDTO.setProjectName(p.getProjectName());
-                   projectWithEmployeeAndHoursDTO.setArea(p.getArea());
+    //6. List of Projects at VIETNAM, + number of employees and total num_of_hour
+    public ProjectWithEmployeeAndHoursInVNDTO getProjectWithTotalEmployeesAndHoursInVietNam() {
+//        return projectRepository.findAll().stream()
+//                .filter(p -> "VIETNAM".equals(p.getArea()))
+//                .map(p -> {
+//                    ProjectWithEmployeeAndHoursDTO projectWithEmployeeAndHoursDTO = new ProjectWithEmployeeAndHoursDTO();
+//                    projectWithEmployeeAndHoursDTO.setProjectId(p.getProjectId());
+//                    projectWithEmployeeAndHoursDTO.setProjectName(p.getProjectName());
+//                    projectWithEmployeeAndHoursDTO.setArea(p.getArea());
+//
+//                    if (p.getAssignments() != null) {
+//                        //get total employee
+//                        projectWithEmployeeAndHoursDTO.setTotalEmployee((int) p.getAssignments()
+//                                .stream()
+//                                .map(Assignment::getEmployee).distinct().count());
+//                        //get total hour
+//                        projectWithEmployeeAndHoursDTO.setTotalSalary(p.getAssignments()
+//                                .stream()
+//                                .mapToDouble(Assignment::getHour).sum());
+//                    }
+//                    return projectWithEmployeeAndHoursDTO;
+//                })
+//                .collect(Collectors.toList());
+        ProjectWithEmployeeAndHoursInVNDTO raw = new ProjectWithEmployeeAndHoursInVNDTO();
 
-                   if(p.getAssignments() != null){
-                       projectWithEmployeeAndHoursDTO.setTotalEmployee((int) p.getAssignments()
-                               .stream()
-                               .map(Assignment::getEmployee).distinct().count());
-                       projectWithEmployeeAndHoursDTO.setTotalSalary(p.getAssignments()
-                               .stream()
-                               .mapToDouble(Assignment::getHour).sum());
-                   }
-                   return projectWithEmployeeAndHoursDTO;
-               })
-               .collect(Collectors.toList());
+        List<Project> projects = projectRepository.findAll().stream()
+                .filter(p -> "VIETNAM".equals(p.getArea()))
+                .collect(Collectors.toList());
+
+        String projectName = projects.stream()
+                .map(Project::getProjectName)
+                .collect(Collectors.joining(", "));
+
+        int totalEmployee = (int) projects.stream()
+                .map(project -> project.getAssignments().stream()
+                        .map(Assignment::getEmployee).distinct().count()).count();
+
+        double totalHours = projects.stream()
+                .map(Project::getAssignments)
+                .mapToDouble(assignments -> assignments.stream()
+                        .mapToDouble(Assignment::getHour).sum()).sum();
+
+        raw.setTotalHour(totalHours);
+        raw.setTotalEmployee(totalEmployee);
+        raw.setProjectName(projectName);
+
+        return raw;
+    }
+
+    //7. List of projects at VIETNAM total, num_of_hours, and Total salary
+    public TotalProjectHourAndSalaryDTO getProjectSalaryDetailByArea() {
+        TotalProjectHourAndSalaryDTO totalProjectHourAndSalaryDTOS = new TotalProjectHourAndSalaryDTO();
+        List<Project> projects = projectRepository.findAll().stream()
+                .filter(p -> "Wakayama-shi".equals(p.getArea()))
+                .collect(Collectors.toList());
+        int totalProject = projects.size();
+        double totalHour = projects.stream()
+                .map(p -> p.getAssignments())
+                .mapToDouble(a -> a.stream()
+                        .mapToDouble(ass -> ass.getHour()).sum()).sum();
+
+        double totalSalary = projects.stream()
+                .map(p -> p.getAssignments())
+                .mapToDouble(a -> a.stream()
+                        .mapToDouble(ass -> ass.getEmployee().getSalary()).sum()).sum();
+
+        totalProjectHourAndSalaryDTOS.setTotalProject(totalProject);
+        totalProjectHourAndSalaryDTOS.setTotalSalary(totalSalary);
+        totalProjectHourAndSalaryDTOS.setTotalHours(totalHour);
+
+        return totalProjectHourAndSalaryDTOS;
+    }
+
+    //10. List all projects with the number of employees and number of hours in a specific area
+    public List<ProjectWithEmployeeAndHoursDTO> getProjectWithTotalEmployeesAndHours(String area) {
+        return projectRepository.findAll().stream()
+                .filter(p -> area.equals(p.getArea()))
+                .map(p -> {
+                    ProjectWithEmployeeAndHoursDTO projectWithEmployeeAndHoursDTO = new ProjectWithEmployeeAndHoursDTO();
+                    projectWithEmployeeAndHoursDTO.setProjectId(p.getProjectId());
+                    projectWithEmployeeAndHoursDTO.setProjectName(p.getProjectName());
+                    projectWithEmployeeAndHoursDTO.setArea(p.getArea());
+
+                    if (p.getAssignments() != null) {
+                        //get total employee
+                        projectWithEmployeeAndHoursDTO.setTotalEmployee((int) p.getAssignments()
+                                .stream()
+                                .map(Assignment::getEmployee).distinct().count());
+                        //get total hour
+                        projectWithEmployeeAndHoursDTO.setTotalSalary(p.getAssignments()
+                                .stream()
+                                .mapToDouble(Assignment::getHour).sum());
+                    }
+                    return projectWithEmployeeAndHoursDTO;
+                })
+                .collect(Collectors.toList());
     }
 
     //11. List all projects with total cost (salary) and hours in a specific area
@@ -119,4 +197,13 @@ public class ProjectService {
     }
 
 
+    //-------custom--------\\
+    public List<Q10CustomDTO> getCustomQuery() {
+        List<Q10CustomDTO> q10CustomDTOS = new ArrayList<>();
+        List<Assignment> assignments = assignmentRepository.findAll();
+
+
+        return q10CustomDTOS;
+    }
 }
+

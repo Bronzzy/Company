@@ -25,4 +25,10 @@ class AssignmentServiceImpTest {
         CustomAssignmentEmployeeProject getProject=assignmentServiceImp.findProjectInArea(area);
         System.out.println(getProject);
     }
+
+    @Test
+    void query6() {
+        List<CustomAssignmentEmployeeProject> customAssignmentEmployeeProjectList = assignmentServiceImp.query6();
+        customAssignmentEmployeeProjectList.forEach(System.out::println);
+    }
 }

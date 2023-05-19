@@ -1,7 +1,6 @@
 package com.example.demo.serviceimp;
 
-import com.example.demo.serviceimp.dto.EmployeeDTO;
-import com.example.demo.serviceimp.dto.RelativeDTO;
+import com.example.demo.serviceimp.dto.DepartmentStatistic;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,13 +11,16 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class RelativeServiceTest {
+class DepartmentServiceImpTest {
 
     @Autowired
-    private RelativeService relativeService;
-
+    private DepartmentServiceImp departmentServiceImp;
+    @Test
+    void getDepartmentStatistics() {
+        List<DepartmentStatistic> temp = departmentServiceImp.getDepartmentStatistics();
+        temp.forEach(System.out::println);
+    }
 }

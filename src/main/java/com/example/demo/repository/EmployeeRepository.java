@@ -1,6 +1,7 @@
 package com.example.demo.repository;
 
 
+import com.example.demo.entity.Department;
 import com.example.demo.entity.Employee;
 import com.example.demo.serviceimp.dto.CustomEmployeeDTO;
 import com.example.demo.serviceimp.dto.EmployeeDTO;
@@ -14,6 +15,8 @@ import java.util.List;
 
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee, String> {
+
+    List<Employee> findByDepartment(Department department);
     List<Employee> findByLastNameAndFirstName(String lastName, String firstName);
 
     List<Employee> findByLastNameLike(String lastName);

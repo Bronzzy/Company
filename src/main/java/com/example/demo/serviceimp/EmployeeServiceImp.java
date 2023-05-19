@@ -5,8 +5,10 @@ import com.example.demo.entity.Project;
 import com.example.demo.entity.Relative;
 import com.example.demo.exception.CompanyException;
 import com.example.demo.mapper.EmployeeMapper;
+import com.example.demo.repository.RelativeRepository;
 import com.example.demo.service.EmployeeService;
 import com.example.demo.serviceimp.dto.CustomEmployeeDTO;
+
 import com.example.demo.serviceimp.dto.EmployeeDTO;
 import com.example.demo.entity.Department;
 import com.example.demo.entity.Employee;
@@ -15,6 +17,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -32,7 +36,7 @@ public class EmployeeServiceImp implements EmployeeService {
 
     private final ProjectService projectService;
 
-//    private final RelativeService relativeService;
+    private final RelativeRepository relativeRepository;
 
     public Employee createEmployee(EmployeeDTO employeeDTO) {
 
@@ -141,17 +145,38 @@ public class EmployeeServiceImp implements EmployeeService {
 
 
 
-    //---------------------QUERY WITH JAVA 8 USING STREAM---------------------\\
+    //---------------------UNIT TEST WITH JAVA 8 USING STREAM---------------------\\
 
-    //12. List of employees who have not been assigned to any project
-     public List<EmployeeDTO> getEmployeeWithSameBirthMonths() {
+    //2. Get all employees that have birth months the same with input month
 
-        List<Employee> employees= employeeRepository.findAll().stream()
-                .filter(e -> e.getAssignment() == null)
+    public List<EmployeeDTO> getEmployeeWithSameBirthMonths(int month){
+        List<Employee> employees = employeeRepository.findAll();
+        employees = employees.stream()
+                .filter(e -> e.getDob().getMonthValue() == month)
                 .collect(Collectors.toList());
         return employeeMapper.toDtos(employees);
     }
 
+    public List<EmployeeDTO> getEmployeeWithSortedRelatives() {
+        List<Employee> employees = employeeRepository.findAll();
+        employees = employees.stream()
+                .filter(e -> !e.getRelatives().isEmpty())
+                .collect(Collectors.toList());
+
+        for (Employee e : employees) {
+            Relative relative = relativeRepository.findAll().stream()
+                    .filter(r -> r.getEmployee().equals(e))
+                    .sorted(Comparator.comparingInt(relatives -> relatives.getRelationship().equals("father") ? 0 :
+                            relatives.getRelationship().equals("mother") ? 1 : 2))
+                    .findFirst().get();
+
+            List<Relative> relatives = new ArrayList<>();
+            relatives.add(relative);
+
+            e.setRelatives(relatives);
+        }
+        return employeeMapper.toDtos(employees);
+    }
 
     //5.List of departments and projects that they manage
     void getAllDepartmentAndProject() {
@@ -159,5 +184,12 @@ public class EmployeeServiceImp implements EmployeeService {
         project.forEach(System.out::println);
     }
 
+    //12. List of employees who have not been assigned to any project
+     public List<EmployeeDTO> getEmployeesNotAssigned() {
+        List<Employee> employees= employeeRepository.findAll().stream()
+                .filter(e -> e.getAssignment() == null)
+                .collect(Collectors.toList());
+        return employeeMapper.toDtos(employees);
+    }
 }
 

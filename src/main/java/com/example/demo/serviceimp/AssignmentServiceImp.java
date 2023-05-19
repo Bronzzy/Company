@@ -9,6 +9,7 @@ import com.example.demo.serviceimp.dto.CustomAssignmentEmployeeProject;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -67,10 +68,13 @@ public class AssignmentServiceImp {
         List<Assignment> assignments = assignmentRepository.findAll();
         assignments = assignments.stream().filter(a -> area.equalsIgnoreCase(a.getProject().getArea()))
                 .collect(Collectors.toList());
-        String names = assignments.stream()
+
+        String
+                names = assignments.stream()
                 .map(a -> a.getProject().getProjectName())
                 .distinct()
                 .collect(Collectors.joining());
+
         Double sumHour = assignments.stream().mapToDouble(Assignment::getHour).sum();
         Long countEmployee = assignments.stream().count();
 
@@ -80,8 +84,33 @@ public class AssignmentServiceImp {
                 .numberOfEmployees(countEmployee)
                 .build();
         return customAssignmentEmployeeProject;
+        //DI TU PROJECT THAY VI ASSIGNMENT
     }
+    //Test
+    public List<CustomAssignmentEmployeeProject> query6(){
+        //return List Project at Area == "Riyom"
+        List<Project> projectList = projectService.getAllProject().stream()
+                .filter(p -> p.getArea().equals("Riyom"))
+                .collect(Collectors.toList());
 
+        //List of Custom DTO
+        List<CustomAssignmentEmployeeProject> customAssignmentEmployeeProjectList = new ArrayList<>();
+
+        //using for loop to compare project Id, using count() and reduce()
+        for(int i = 0; i < projectList.size(); i++){
+            int finI = i;
+            Long numberOfEmps =(Long) assignmentRepository.findAll().stream()
+                    .filter(a -> a.getProject().getProjectId() == projectList.get(finI).getProjectId())
+                    .count();
+            Double numberOfHour =  assignmentRepository.findAll().stream()
+                    .filter(a -> a.getProject().getProjectId() == projectList.get(finI).getProjectId())
+                    .map(Assignment::getHour)
+                    .reduce(0d, (total, element) -> total + element);
+            CustomAssignmentEmployeeProject customAssignmentEmployeeProject = new CustomAssignmentEmployeeProject(projectList.get(finI).getProjectName(), numberOfEmps ,numberOfHour);
+            customAssignmentEmployeeProjectList.add(customAssignmentEmployeeProject);
+        }
+        return customAssignmentEmployeeProjectList;
+    }
 
     //7. List of projects at VIETNAM total, num_of_hours, and Total salary
 

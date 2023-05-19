@@ -2,6 +2,7 @@ package com.example.demo.serviceimp;
 
 import com.example.demo.serviceimp.dto.ProjectDTO;
 import com.example.demo.serviceimp.dto.ProjectSalaryDTO;
+import com.example.demo.serviceimp.dto.TotalProjectHourAndSalaryDTO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,5 +35,11 @@ class ProjectServiceTest {
         String area = "Hanoi";
         List<ProjectSalaryDTO> tempList = projectService.getProjectSalaryDetailByArea(area);
         tempList.forEach(System.out::println);
+    }
+
+    @Test
+    void testGetProjectSalaryDetailByArea() {
+        TotalProjectHourAndSalaryDTO totalProjectHourAndSalaryDTO = projectService.getProjectSalaryDetailByArea();
+        System.out.println(totalProjectHourAndSalaryDTO);
     }
 }

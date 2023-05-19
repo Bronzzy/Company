@@ -7,10 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProjectWithEmployeeAndHoursDTO {
+public class ProjectWithEmployeeAndHoursInVNDTO {
+
     private String projectName;
     private Integer totalEmployee;
-    private Double totalSalary;
-    private Long ProjectId;
-    private String area;
+    private Double totalHour;
 }

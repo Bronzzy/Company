@@ -33,4 +33,14 @@ public class Relative {
     @ManyToOne
     @JoinColumn(name = "employeeId")
     private Employee employee;
+
+    private int dao;
+    private int hoa;
+    private int binh;
+    private int loserpool;
+    private int steven;
+    private int gerrard;
+    private int truotChanMatCup;
+    private int karius;
+    private int sadioMane;
 }

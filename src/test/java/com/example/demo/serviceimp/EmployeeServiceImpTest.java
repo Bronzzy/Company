@@ -1,6 +1,7 @@
 package com.example.demo.serviceimp;
 
 import com.example.demo.entity.*;
+import com.example.demo.serviceimp.dto.DepartmentStatistic;
 import com.example.demo.serviceimp.dto.EmployeeDTO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -42,8 +43,15 @@ class EmployeeServiceImpTest {
 
     @Test
     void getEmployeeWithSameBirthMonths() {
-        List<EmployeeDTO> tempList = employeeServiceImp.getEmployeeWithSameBirthMonths();
+        int month = 3;
+        List<EmployeeDTO> tempList = employeeServiceImp.getEmployeeWithSameBirthMonths(month);
         assertEquals(2,tempList.size());
         tempList.forEach(System.out::println);
+    }
+
+    @Test
+    void getEmployeeWithSortedRelatives() {
+        List<EmployeeDTO> temp = employeeServiceImp.getEmployeeWithSortedRelatives();
+        temp.forEach(System.out::println);
     }
 }
